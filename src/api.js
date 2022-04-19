@@ -4,7 +4,6 @@ const {
 } = require('uuid')
 const request = require('./utils/request')
 const {
-  sendGetRequest,
   sendPostRequest
 } = require('./utils/request2')
 
@@ -20,7 +19,7 @@ function stringObject(obj) {
 }
 
 /**
- * 检查收货地址
+ * 检查配置
  */
 async function checkConfig() {
   await request({
@@ -96,6 +95,7 @@ async function selectAll() {
       logger.info(`购物车成功选择了${products.length}件商品: ${products.map(item => item.product_name).join(',')}`)
       return new Promise((resolve) => resolve(products))
     }
+    logger.warn(`勾选购物车无可购买商品`)
     return new Promise((resolve) => resolve([]))
   } catch (error) {
     logger.error('勾选购物车全选按钮失败: ' + error)
@@ -106,7 +106,6 @@ async function selectAll() {
 /**
  * 获取购物车信息
  *
- * @param noProductsContinue 无商品是否继续
  * @return 购物车信息
  */
 async function getCart() {
@@ -212,7 +211,6 @@ async function getMultiReserveTime(cartMap) {
 /**
  * 获取订单确认信息
  *
- * @param addressId           配送地址id
  * @param cartMap             购物车信息
  * @param multiReserveTimeMap 配送信息
  * @return 订单确认信息
@@ -266,16 +264,21 @@ async function getCheckOrder(cartMap, multiReserveTimeMap) {
       })
     })
     const data = response.data
-    const order = data.order
-    const result = {
-      freight_discount_money: order.freight_discount_money,
-      freight_money: order.freight_money,
-      total_money: order.total_money,
-      freight_real_money: order.freights[0].freight.freight_real_money,
-      user_ticket_id: order.default_coupon._id
+
+    if (data && data.order) {
+      const order = data.order
+      const result = {
+        freight_discount_money: order.freight_discount_money,
+        freight_money: order.freight_money,
+        total_money: order.total_money,
+        freight_real_money: order.freights[0].freight.freight_real_money,
+        user_ticket_id: order.default_coupon._id
+      }
+      logger.info('获取订单确认信息成功')
+      return new Promise((resolve) => resolve(result))
     }
-    logger.info('获取订单确认信息成功')
-    return new Promise((resolve) => resolve(result))
+    logger.warn('获取订单确认信息为空')
+    return new Promise((resolve) => resolve(null))
   } catch (error) {
     logger.error('获取订单确认信息失败: ' + error)
     return new Promise((resolve, reject) => reject(error))

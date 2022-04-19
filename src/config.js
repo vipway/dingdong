@@ -21,7 +21,7 @@ const headerConfig = {
   'ddmc-station-id': stationId
 }
 
-// 公共参数 （抓包填写）
+// 公共参数（抓包填写）
 const paramConfig = {
   s_id: '',
   openid: '',

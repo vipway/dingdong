@@ -30,14 +30,13 @@ async function run() {
     }
 
     // 提交订单
-    // const confirmOrder = await api.placeOrder(cartRes, multiReserveTimeRes, checkOrderRes)
-    console.log('confirmOrder-res', confirmOrder)
+    const confirmOrder = await api.placeOrder(cartRes, multiReserveTimeRes, checkOrderRes)
 
   } catch (error) {
     // setTimeout(() => {
     //   run()
     // }, 3000)
-    console.log('run-error', error)
+    logger.error('run-error: ' + error)
   }
 }
 

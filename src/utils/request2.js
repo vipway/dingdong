@@ -1,6 +1,7 @@
 // axios post请求参数提交失败，改换request post
 const request = require('request')
 const sign = require('./sign')
+const logger = require('./logger')
 const {
   getHeaders,
   getPayload
@@ -9,25 +10,24 @@ const {
 function handleResult(error, response, resolve, reject) {
   try {
     if (error || response.statusCode !== 200) {
-      console.log('请求异常')
+      logger.error('请求异常')
       return resolve(error || null)
     }
     const body = JSON.parse(response.body)
     if (!body) {
-      console.log('请求返回数据为空')
+      logger.warn('请求返回数据为空')
       return resolve(body)
     }
-    console.log('body: ' + response.body)
     return resolve(body)
   } catch (error) {
     return reject(error)
   }
 }
 
-function buildRequest(options) {
+function buildRequest(headers, data) {
   return {
-    headers: Object.assign(getHeaders(), options.headers),
-    data: sign(Object.assign(getPayload(), options.data))
+    headers: Object.assign(getHeaders(), headers),
+    data: sign(Object.assign(getPayload(), data))
   }
 }
 

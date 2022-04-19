@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node src/main.js",
-    "test": "node src/test.js"
+    "check": "node src/test.js"
   },
   "repository": "git@github.com:vipway/dingdong.git",
   "author": "cody",
