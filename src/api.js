@@ -1,3 +1,5 @@
+const path = require('path')
+const sound = require('sound-play')
 const logger = require('./utils/logger')
 const {
   v4: uuid
@@ -16,6 +18,17 @@ const {
 
 function stringObject(obj) {
   return encodeURIComponent(JSON.stringify(obj))
+}
+
+function play() {
+  const interval = setInterval(function () {
+    const filePath = path.join(__dirname, 'audio/tips.wav')
+    sound.play(filePath)
+  }, 1050)
+
+  setTimeout(function () {
+    clearInterval(interval)
+  }, 2150)
 }
 
 /**
@@ -360,9 +373,8 @@ async function placeOrder(cartMap, multiReserveTimeMap, checkOrderMap) {
       })
     })
     if (response.success) {
-      for (let i = 0; i < 10; i++) {
-        logger.info('恭喜你，已成功下单 当前下单总金额：' + cartMap.total_money)
-      }
+      logger.info('恭喜你，已成功下单 当前下单总金额：' + cartMap.total_money)
+      play()
     }
     return new Promise((resolve) => resolve(response))
   } catch (error) {

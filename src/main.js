@@ -30,7 +30,7 @@ async function run() {
     }
 
     // 提交订单
-    const confirmOrder = await api.placeOrder(cartRes, multiReserveTimeRes, checkOrderRes)
+    await api.placeOrder(cartRes, multiReserveTimeRes, checkOrderRes)
 
   } catch (error) {
     // setTimeout(() => {
